@@ -73,7 +73,6 @@ const registerUser = async (req, res) => {
     });
   } catch (error) {
     // Logging the error
-    console.log(error.message);
     res.status(500).json({
       success: false,
       message: "Can't register user, please try again",
@@ -128,7 +127,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({ success: true, accessToken });
   } catch (error) {
     // Error handling
-    console.log(error.message);
+
     res.status(500).json({
       success: false,
       message: "Can't login, please try again",

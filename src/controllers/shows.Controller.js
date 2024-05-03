@@ -52,6 +52,7 @@ const fetchTVShows = async (req, res) => {
 const fetchTVShow = async (req, res) => {
   try {
     // Extracting the id from URL parameters and creating a MongoDB ObjectId for the same
+
     const idToFetch = new ObjectId(req.params.id);
 
     // Finding the TV show details using the newly created ObjectId
@@ -74,6 +75,7 @@ const fetchTVShow = async (req, res) => {
         },
       }
     );
+
     // Sending the result back to the client
     res.status(200).json(tvShow);
   } catch (err) {

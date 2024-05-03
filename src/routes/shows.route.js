@@ -12,10 +12,10 @@ const Router_shows = express.Router();
 Router_shows.get("/", fetchTVShows);
 
 // Endpoints to retrieve TV shows based on search titles
-Router_shows.get("/search", fetchTVShow);
+Router_shows.get("/:id", fetchTVShow);
 
 // Endpoints to retrieve details about a single TV show based on the given ID
-Router_shows.get("/:id", searchTVShows);
+Router_shows.get("/search", searchTVShows);
 
 // Endpoints to retrieve movie URLs based on the given ID
 Router_shows.get("/urls/:id", fetchTVShowCast);
