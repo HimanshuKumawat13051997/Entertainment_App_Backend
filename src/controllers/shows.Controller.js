@@ -2,7 +2,7 @@ const database = require("../db/index");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 // Fetching TV show collection from the database
-const ShowsCollection = database.collection("Shows");
+const Shows = database.collection("Shows");
 
 // controller to retrieve all TV shows based on page number
 const fetchTVShows = async (req, res) => {
@@ -13,7 +13,7 @@ const fetchTVShows = async (req, res) => {
     const offset = parseInt(page - 1) * limit;
 
     // Getting TV shows based on the page number
-    const tvShows = await ShowsCollection.find(
+    const tvShows = await Shows.find(
       {},
       {
         projection: {
@@ -30,7 +30,7 @@ const fetchTVShows = async (req, res) => {
       .limit(limit)
       .toArray();
 
-    const totalTVShows = await ShowsCollection.countDocuments();
+    const totalTVShows = await Shows.countDocuments();
     // To indicate the total number of pages
     const totalPages = Math.ceil(totalTVShows / limit);
 
@@ -43,7 +43,7 @@ const fetchTVShows = async (req, res) => {
     }
   } catch (err) {
     // Logging the error
-    console.error(err.message);
+    console.error(err);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -56,7 +56,7 @@ const fetchTVShow = async (req, res) => {
     const idToFetch = new ObjectId(req.params.id);
 
     // Finding the TV show details using the newly created ObjectId
-    const tvShow = await ShowsCollection.findOne(
+    const tvShow = await Shows.findOne(
       { _id: idToFetch },
       {
         projection: {
@@ -86,14 +86,13 @@ const fetchTVShow = async (req, res) => {
 };
 
 // controller to get TV shows based on search titles
-const searchTVShows = async (req, res) => {
+const searchShows = async (req, res) => {
   try {
     // To extract the title from query params to search for
-    const titleToSearch = req.query.title;
-    const titleRegex = new RegExp(titleToSearch, "i");
-
+    const titleToGet = req.query.title;
+    const titleRegex = new RegExp(titleToGet, "i");
     // To query the results using the newly created regex
-    const tvShows = await ShowsCollection.find(
+    const tvSh = await Shows.find(
       { title: { $regex: titleRegex } },
       {
         projection: {
@@ -108,11 +107,11 @@ const searchTVShows = async (req, res) => {
     ).toArray();
 
     // If no TV show is found for the given title, return a 404 error
-    if (tvShows.length === 0) {
+    if (tvSh.length === 0) {
       res.status(404).json({ error: "No TV Shows Found" });
     } else {
       // Sending the result back to the client
-      res.status(200).json(tvShows);
+      res.status(200).json(tvSh);
     }
   } catch (err) {
     // Logging the error
@@ -128,7 +127,7 @@ const fetchTVShowUrls = async (req, res) => {
     const idToFetch = new ObjectId(req.params.id);
 
     // Finding the TV show URL details using the newly created ObjectId
-    const urls = await ShowsCollection.findOne(
+    const urls = await Shows.findOne(
       { _id: idToFetch },
       {
         projection: {
@@ -161,7 +160,7 @@ const fetchTVShowCast = async (req, res) => {
     const idToFetch = new ObjectId(req.params.id);
 
     // Finding the TV show cast details using the newly created ObjectId
-    const cast = await ShowsCollection.findOne(
+    const cast = await Shows.findOne(
       { _id: idToFetch },
       { projection: { cast: 1, _id: 0 } }
     );
@@ -174,10 +173,11 @@ const fetchTVShowCast = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 module.exports = {
   fetchTVShows,
   fetchTVShow,
-  searchTVShows,
+  searchShows,
   fetchTVShowCast,
   fetchTVShowUrls,
 };
