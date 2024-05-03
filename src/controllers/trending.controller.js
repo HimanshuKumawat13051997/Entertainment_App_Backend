@@ -1,9 +1,9 @@
-const database = require("../db/index");
+const database = require("../db");
 const axios = require("axios");
 // Loading environment variables from dotenv configuration
 require("dotenv/config");
 
-// Checks if the Trending collection requires an update
+// Checks if the Trending collection requires an update1
 const requiresUpdate = async () => {
   const trendingCol = database.collection("Trending");
   const latestEntry = await trendingCol.findOne({}, { sort: { _id: -1 } });
@@ -21,21 +21,22 @@ const updateTrendingData = async () => {
   const trendingUrl = "https://api.themoviedb.org/3/trending/all/week";
   const apiKey = process.env.TMDB_API_KEY;
   const trendingResponse = await axios.get(`${trendingUrl}?api_key=${apiKey}`);
-  const trendingData = trendingResponse.data;
-  const trendingItems = trendingData.results;
+
+  const trendingData = await trendingResponse.data;
+  const trendingItems = await trendingData.results;
 
   const detailsPromises = trendingItems.map(async (item) => {
     const mediaType = item.media_type;
+    console.log(mediaType);
     const detailsUrl = `https://api.themoviedb.org/3/${mediaType}/${item.id}/external_ids?api_key=${apiKey}`;
 
     const detailsResponse = await axios.get(detailsUrl);
-    const detailsData = detailsResponse.data;
-    const imdbId = detailsData.imdb_id;
+    const detailsData = await detailsResponse.data;
+    const imdbId = await detailsData.imdb_id;
 
     const collectionName = mediaType === "movie" ? "Movies" : "Shows";
-    const collection = database.collection(collectionName);
-    const mediaDetails = await collection.findOne({ imdbId });
-
+    const collect = database.collection(collectionName);
+    const mediaDetails = await collect.findOne({ imdbId });
     return mediaDetails ? { ...mediaDetails, createdAt: new Date() } : null;
   });
 

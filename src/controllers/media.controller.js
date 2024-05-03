@@ -1,4 +1,4 @@
-const database = require("../db");
+const database = require("../db/index");
 
 const Movies = database.collection("Movies");
 const TvShows = database.collection("Shows");

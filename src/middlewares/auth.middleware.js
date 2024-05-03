@@ -8,7 +8,7 @@ const jwtauthentication = async (req, res, next) => {
   if (!headerinauth) {
     return res.sendStatus(401);
   }
-  const maintoken = authHeader.split(" ")[1];
+  const maintoken = headerinauth.split(" ")[1];
 
   //   accesstoken verification
   jwt.verify(maintoken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {

@@ -51,6 +51,6 @@ const tvShowSchema = new mongoose.Schema({
 });
 
 // below exports the model for adding it in controllers for populating tvshows
-const TVShow = mongoose.model("TVShow", tvShowSchema);
+const Shows = mongoose.model("Shows", tvShowSchema);
 
-module.exports = TVShow;
+module.exports = Shows;

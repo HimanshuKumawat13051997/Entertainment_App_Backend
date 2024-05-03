@@ -9,6 +9,7 @@ const cors = require("cors");
 const Router_media = require("./routes/media.route.");
 const axios = require("axios");
 const app = express();
+app.use(cors());
 const PORT = process.env.PORT;
 
 app.use(express.json());
@@ -16,7 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(CredentialsAllowed);
 
-app.use(cors());
 // all routes
 app.use("/movies", Router_movies);
 

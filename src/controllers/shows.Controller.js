@@ -1,4 +1,4 @@
-const database = require("../db");
+const database = require("../db/index");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 // Fetching TV show collection from the database

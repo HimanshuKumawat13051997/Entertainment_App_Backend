@@ -1,4 +1,4 @@
-const database = require("../db");
+const database = require("../db/index");
 const ObjectId = require("mongoose").Types.ObjectId;
 //  access to movies from the database
 const Movies = database.collection("Movies");
