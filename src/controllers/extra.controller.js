@@ -72,7 +72,7 @@ const Ex_extraction = async (req, res) => {
 
 const Ex_filter = async (req, res) => {
   // const { genres, rating } = req.body;
-  const { genres, rating } = req.body;
+  let { genres, rating } = req.body;
   const page = req.query.page;
   const limit = 10;
   const offset = parseInt(page - 1) * limit;
@@ -82,8 +82,8 @@ const Ex_filter = async (req, res) => {
     if (genres === !undefined && rating !== undefined) {
       filteredmovies = await Movies.find(
         {
-          genres: genres,
-          rating: { $gte: rating },
+          genres: genres.toLowerCase(),
+          rating: { $gte: Number(rating) },
         },
         {
           projection: {
@@ -105,7 +105,7 @@ const Ex_filter = async (req, res) => {
     else if (genres !== undefined || rating === undefined) {
       filteredmovies = await Movies.find(
         {
-          genres: genres,
+          genres: genres.toLowerCase(),
         },
         {
           projection: {
@@ -125,7 +125,7 @@ const Ex_filter = async (req, res) => {
     } else {
       filteredmovies = await Movies.find(
         {
-          rating: { $gte: rating },
+          rating: { $gte: +rating },
         },
         {
           projection: {
