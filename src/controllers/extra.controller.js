@@ -43,24 +43,7 @@ const Ex_extraction = async (req, res) => {
   try {
     const idextract = new ObjectId(req.params.id);
 
-    const movie = await Movies.findOne(
-      { _id: idextract },
-      {
-        projection: {
-          title: 1,
-          releaseDate: 1,
-          cast: 1,
-          rating: 1,
-          summary: 1,
-          genres: 1,
-          runtime: 1,
-          language: 1,
-          posterUrl: 1,
-          status: 1,
-          type: 1,
-        },
-      }
-    );
+    const movie = await Movies.findOne({ _id: idextract });
     // sending the found result
     res.status(200).json(movie);
   } catch (err) {
