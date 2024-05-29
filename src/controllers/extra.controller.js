@@ -71,26 +71,108 @@ const Ex_extraction = async (req, res) => {
 };
 
 const Ex_filter = async (req, res) => {
+  // const { genres, rating } = req.body;
+  const { genres, rating } = req.body;
+  const page = req.query.page;
+  const limit = 10;
+  const offset = parseInt(page - 1) * limit;
+
   try {
-    const { genres, rating } = req.body;
-    if (genres.length > 0 && rating !== undefined) {
-      const filteredmovies = await Movies.findMany({
-        genres: genres,
-        rating: { $gte: rating },
-      });
+    let filteredmovies;
+    if (genres === !undefined && rating !== undefined) {
+      filteredmovies = await Movies.find(
+        {
+          genres: genres,
+          rating: { $gte: rating },
+        },
+        {
+          projection: {
+            title: 1,
+            bannerUrl: 1,
+            summary: 1,
+            releaseDate: 1,
+            type: 1,
+            posterUrl: 1,
+          },
+        }
+      )
+        .skip(offset)
+        .limit(limit)
+        .toArray();
       res.status(200).json(filteredmovies);
     }
     // sending the found result
-    else if (genres.length > 0 || rating === undefined) {
-      const filteredmovies = await Movies.findMany({
-        genres: genres,
-      });
+    else if (genres !== undefined || rating === undefined) {
+      filteredmovies = await Movies.find(
+        {
+          genres: genres,
+        },
+        {
+          projection: {
+            title: 1,
+            bannerUrl: 1,
+            summary: 1,
+            releaseDate: 1,
+            type: 1,
+            posterUrl: 1,
+          },
+        }
+      )
+        .skip(offset)
+        .limit(limit)
+        .toArray();
       res.status(200).json(filteredmovies);
     } else {
-      const filteredmovies = await Movies.findMany({
-        rating: { $gte: rating },
-      });
+      filteredmovies = await Movies.find(
+        {
+          rating: { $gte: rating },
+        },
+        {
+          projection: {
+            title: 1,
+            bannerUrl: 1,
+            summary: 1,
+            releaseDate: 1,
+            type: 1,
+            posterUrl: 1,
+          },
+        }
+      )
+        .skip(offset)
+        .limit(limit)
+        .toArray();
       res.status(200).json(filteredmovies);
+    }
+  } catch (err) {
+    // Error handling
+    console.log(err.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const exsearchFeature = async (req, res) => {
+  try {
+    const titleToGet = req.query.title;
+    const titleRegex = new RegExp(titleToGet, "i");
+
+    const movies = await Movies.find(
+      { title: { $regex: titleRegex } },
+      {
+        projection: {
+          title: 1,
+          bannerUrl: 1,
+          releaseDate: 1,
+          type: 1,
+          posterUrl: 1,
+        },
+      }
+    ).toArray();
+
+    // error if no result found
+    if (movies.length === 0) {
+      res.status(404).json({ error: "Resources are not Found" });
+    } else {
+      res.status(200).json(movies);
     }
   } catch (err) {
     // Error handling
@@ -101,6 +183,7 @@ const Ex_filter = async (req, res) => {
 
 module.exports = {
   Extra_extraction,
-  Ex_extraction,
   Ex_filter,
+  Ex_extraction,
+  exsearchFeature,
 };
