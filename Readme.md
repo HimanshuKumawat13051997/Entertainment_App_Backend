@@ -1,141 +1,128 @@
-# Flix-Backend Service
+# Entertainment App API Documentation
 
-## Introduction
+Welcome to the Entertainment App API documentation. This API provides endpoints to access a wide range of movies, TV shows, trending content, user authentication, and user watchlists.
 
-Flix-Backend is a comprehensive backend service designed to support a front-end application for browsing, managing, and tracking movies and TV shows. It includes functionalities for user authentication, managing watchlists, and accessing detailed information about various entertainment media.
+## Base URL
 
-## Table Of Contents
+The base URL for all endpoints is: https://entertainment-app-backend-3huo.onrender.com
 
-<details open><summary>Contents</summary>
 
-- [Introduction](#introduction)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation and setup](#setup-instructions)
-- [API Endpoints](#detailed-api-endpoints)
-- [Aditional Notes](#additional-notes)
-- [License](#license)
+## Authentication
 
-</details>
+Authentication is required for certain endpoints to access user-specific features such as watchlists. The authentication process involves registering a new user, logging in, and obtaining a JSON Web Token (JWT) for subsequent requests.
 
-## Features
+## Endpoints
 
-- **User Authentication**: Secure registration and login processes with JWT for maintaining sessions.
-- **Media Catalog**: Access to a wide range of movies and TV shows, including search functionality and detailed media information.
-- **Personal Watchlist**: Users can create and manage a personal watchlist for tracking their favorite movies and TV shows.
-- **Trending Content**: Endpoint to fetch trending content based on popularity or other criteria.
+### Movies
 
-## Prerequisites
+Endpoints related to movies allow users to retrieve information about movies, search for movies, fetch details of a specific movie, obtain URLs and cast information, and more.
 
-- **Node.js**: JavaScript runtime needed to run the server.
-- **npm**: Node Package Manager, for managing dependencies.
-- **MongoDB**: Database where all application data is stored.
+- `/movies`: Retrieve all movies based on page number.
+- `/movies/search`: Search for movies based on titles.
+- `/movies/:id`: Retrieve details about a single movie based on its ID.
+- `/movies/urls/:id`: Retrieve movie URLs based on their IDs.
+- `/movies/cast/:id`: Retrieve movie cast based on their IDs.
 
-## Setup Instructions
+### TV Shows
 
-### Step 1: Clone the Repository
+Endpoints related to TV shows provide functionality to fetch TV shows, search for shows, get details of a specific show, obtain cast information, and more.
 
-```sh
-git clone https://github.com/Deep-Thakkar-1910/AB_Flix_Backend.git
-cd AB_Flix_Backend
-```
+- `/tvshows`: Retrieve all TV shows based on page number.
+- `/tvshows/search`: Search for TV shows based on titles.
+- `/tvshows/:id`: Retrieve details about a single TV show based on its ID.
+- `/tvshows/urls/:id`: Retrieve TV show URLs based on their IDs.
+- `/tvshows/cast/:id`: Retrieve TV show cast based on their IDs.
 
-### Step 2: Environment Configuration
+### Trending
 
-Duplicate `.env.example` to `.env` and configure the environment variables:
+The trending endpoints allow users to fetch trending movies and TV shows.
 
-- `MONGO_CONNECTION_STRING`: MongoDB connection string.
-- `TMDB_API_KEY` : Your API key
-- `ACCESS_TOKEN_SECRET`: Secret key for JWT token generation and verification.
+- `/trending`: Retrieve all trending movies and TV shows.
 
-### Step 3: Install Dependencies
+### User
 
-```sh
-npm install
-```
+Endpoints related to user management enable users to register, login, logout, and manage their watchlists.
 
-### Step 4: Running the Server
+- `/user/register`: Register a new user.
+- `/user/login`: Login as an existing user.
+- `/user/logout`: Logout a user.
+- `/user/details`: Get details of a user using JWT for persistent login.
+- `/user/watchlist`: Get a user's watchlist.
+- `/user/watchlist/:id`: Add new movies or TV shows to a user's watchlist based on ID.
+- `/user/watchlist/:id`: Remove movies or TV shows from a user's watchlist based on ID.
 
-`npm start`
+## Error Handling
 
-## Detailed API Endpoints
+The API returns appropriate HTTP status codes along with error messages in case of errors. Make sure to handle these errors in your application.
 
-### User Endpoints
+# Entertainment App Database Schema Documentation
 
-- `POST /user/register`: Register a new user.
+## Overview
 
-  - **Body**: `{ "email": "user@example.com", "password": "password123" }`
-  - **Response**: User object with JWT token.
+This document outlines the database schemas used in the Entertainment App for managing movies, TV shows, and user data.
 
-- `POST /user/login`: Authenticate and log in a user.
+## Schemas
 
-  - **Body**: `{ "email": "user@example.com", "password": "password123" }`
-  - **Response**: User object with JWT token.
+### Movie Schema
 
-- `GET /user/details`: Retrieve details of the currently logged-in user.
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Response**: User object without sensitive information like password.
+- **Purpose**: Defines the structure for storing movie data.
+- **Collection**: Movies
+- **Required Fields**:
+    - `title`: String
+    - `language`: String
+    - `releaseDate`: Date
+    - `summary`: String
+    - `cast`: Array of Strings
+- **Optional Fields**:
+    - `imdbId`: String
+    - `rating`: Number
+    - `runtime`: Number
+    - `status`: String
+    - `genres`: Array of Strings
+    - `homepage`: String
+    - `bannerUrl`: String
+    - `posterUrl`: String
+    - `trailerUrl`: String
 
-### Movie Endpoints
+### TV Show Schema
 
-- `GET /movies`: Fetch a list of movies with pagination.
+- **Purpose**: Defines the structure for storing TV show data.
+- **Collection**: TV Shows
+- **Required Fields**:
+    - `title`: String
+    - `language`: String
+    - `firstAirDate`: Date
+    - `summary`: String
+- **Optional Fields**:
+    - `imdbId`: String
+    - `rating`: Number
+    - `rated`: String
+    - `lastAirDate`: Date
+    - `status`: String
+    - `genres`: Array of Strings
+    - `cast`: Array of Strings
+    - `homepage`: String
+    - `bannerUrl`: String
+    - `posterUrl`: String
 
-  - **Query Parameters**: `?page=<number>`
-  - **Response**: Array of movie objects.
+### User Schema
 
-- `GET /movies/search`: Search for movies by title.
+- **Purpose**: Manages user authentication and stores user-specific data.
+- **Collection**: Users
+- **Fields**:
+    - `email`: String (required)
+    - `password`: String (required)
+    - `watchlist`: Array of ObjectIds (references Movies and TV Shows)
+- **Features**:
+    - `timestamps`: Automatically manages creation and update timestamps.
 
-  - **Query Parameters**: `?title=<searchTerm>`
-  - **Response**: Array of movies matching the search criteria.
+## Relationships
 
-- `GET /movies/:id`: Get detailed information about a specific movie.
-  - **Path Parameters**: `id` (Movie ID)
-  - **Response**: Movie object with detailed information.
+- **User to Movies/TV Shows**: A user can have multiple movies and TV shows in their watchlist, representing a one-to-many relationship.
 
-### TV Show Endpoints
+## Model Creation
 
-- `GET /tvshows`: Fetch a list of TV shows with pagination.
+- **Function**: `mongoose.model()` is used to create models based on the defined schemas, which interact with the database.
 
-  - **Query Parameters**: `?page=<number>`
-  - **Response**: Array of TV show objects.
 
-- `GET /tvshows/search`: Search for TV shows by title.
 
-  - **Query Parameters**: `?title=<searchTerm>`
-  - **Response**: Array of TV shows matching the search criteria.
-
-- `GET /tvshows/:id`: Get detailed information about a specific TV show.
-  - **Path Parameters**: `id` (TV Show ID)
-  - **Response**: TV show object with detailed information.
-
-### Watchlist Endpoints
-
-- `GET user/watchlist`: Retrieve the current user's watchlist.
-
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Response**: Array of items in the user's watchlist.
-
-- `POST user/watchlist/:id`: Add a movie or TV show to the watchlist.
-
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Path Parameters**: `id` (Movie or TV Show ID)
-  - **Response**: Success message or error.
-
-- `DELETE user/watchlist/:id`: Remove an item from the watchlist.
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Path Parameters**: `id` (ID of the item to remove from the watchlist)
-  - **Response**: Success message or error.
-
-### Trending Endpoint
-
-- `GET /trending`: Fetch trending movies and TV shows.
-  - **Response**: Array of trending movies and TV shows.
-
-## Additional Notes
-
-- Ensure MongoDB is running and accessible through the `MONGODB_CONNECTION_STRING` specified in the `.env` file.
-- When running in Docker, ensure the MongoDB connection string (`MONGODB_CONNECTION_STRING`) is set to the appropriate container name
-
-## License
-
-This project is Distributed under the MIT License. See [LICENSE.txt](./LICENSE.txt) for more information.
