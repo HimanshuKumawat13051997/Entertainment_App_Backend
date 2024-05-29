@@ -73,9 +73,8 @@ const Ex_extraction = async (req, res) => {
 const Ex_filter = async (req, res) => {
   try {
     const { genres, rating } = req.body;
-
     if (genres.length > 0 && rating !== undefined) {
-      const filteredmovies = await Movies.find({
+      const filteredmovies = await Movies.findMany({
         genres: genres,
         rating: { $gte: rating },
       });
@@ -83,12 +82,12 @@ const Ex_filter = async (req, res) => {
     }
     // sending the found result
     else if (genres.length > 0 || rating === undefined) {
-      const filteredmovies = await Movies.find({
+      const filteredmovies = await Movies.findMany({
         genres: genres,
       });
       res.status(200).json(filteredmovies);
     } else {
-      const filteredmovies = await Movies.find({
+      const filteredmovies = await Movies.findMany({
         rating: { $gte: rating },
       });
       res.status(200).json(filteredmovies);
