@@ -135,6 +135,9 @@ const Ex_filter = async (req, res) => {
 
 const exsearchFeature = async (req, res) => {
   try {
+    const page = req.query.page;
+    const limit = 10;
+    const offset = parseInt(page - 1) * limit;
     const titleToGet = req.query.title;
     const titleRegex = new RegExp(titleToGet, "i");
 
@@ -149,7 +152,10 @@ const exsearchFeature = async (req, res) => {
           posterUrl: 1,
         },
       }
-    ).toArray();
+    )
+      .skip(offset)
+      .limit(limit)
+      .toArray();
 
     // error if no result found
     if (movies.length === 0) {
