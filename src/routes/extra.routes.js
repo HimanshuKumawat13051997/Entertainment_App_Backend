@@ -17,8 +17,8 @@ Router_extra.post("/info", Ex_filter);
 // Endpoint to search for movies based on titles
 Router_extra.get("/search", exsearchFeature);
 
-// // Endpoint to fetch details about a single movie based on its ID
-// Router_extra.get("/:id", Ex_extraction);
+// Endpoint to fetch details about a single movie based on its ID
+Router_extra.get("/:id", Ex_extraction);
 
 // // Endpoint to fetch movie URLs based on their IDs
 // Router_extra.get("/urls/:id", getMovieUrls);
