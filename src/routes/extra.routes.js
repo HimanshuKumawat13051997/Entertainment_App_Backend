@@ -12,7 +12,7 @@ const Router_extra = express.Router();
 Router_extra.get("/", Extra_extraction);
 
 //endpoint to retrieve all movies based on filters
-Router_extra.get("/info", Ex_filter);
+Router_extra.post("/info", Ex_filter);
 
 // Endpoint to search for movies based on titles
 Router_extra.get("/search", exsearchFeature);
