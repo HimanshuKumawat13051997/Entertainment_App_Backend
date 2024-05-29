@@ -99,7 +99,7 @@ const Ex_filter = async (req, res) => {
         .skip(offset)
         .limit(limit)
         .toArray();
-      res.status(200).json(filteredmovies);
+      res.status(200).json({ allmovies: filteredmovies });
     }
     // sending the found result
     else if (genres !== undefined || rating === undefined) {
@@ -121,7 +121,7 @@ const Ex_filter = async (req, res) => {
         .skip(offset)
         .limit(limit)
         .toArray();
-      res.status(200).json(filteredmovies);
+      res.status(200).json({ allmovies: filteredmovies });
     } else {
       filteredmovies = await Movies.find(
         {
@@ -141,7 +141,7 @@ const Ex_filter = async (req, res) => {
         .skip(offset)
         .limit(limit)
         .toArray();
-      res.status(200).json(filteredmovies);
+      res.status(200).json({ allmovies: filteredmovies });
     }
   } catch (err) {
     // Error handling
