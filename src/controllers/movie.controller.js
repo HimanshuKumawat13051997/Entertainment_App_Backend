@@ -17,7 +17,6 @@ const Movies_extraction = async (req, res) => {
         projection: {
           title: 1,
           bannerUrl: 1,
-          summary: 1,
           releaseDate: 1,
           type: 1,
           posterUrl: 1,

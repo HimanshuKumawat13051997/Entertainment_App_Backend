@@ -8,6 +8,7 @@ const Routes_trend = require("./routes/trending.routes");
 const CredentialsAllowed = require("./middlewares/cred.middleware");
 const cors = require("cors");
 const Router_media = require("./routes/media.route.");
+const Router_extra = require("./routes//extra.routes");
 const axios = require("axios");
 const app = express();
 app.use(cors());
@@ -28,6 +29,8 @@ app.use("/trending", Routes_trend);
 app.use("/media", Router_media);
 
 app.use("/user", Router_User);
+
+app.use("/extramovies", Router_extra);
 
 // handling any other request
 app.all("*", (req, res) => {
